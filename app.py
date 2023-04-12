@@ -32,8 +32,6 @@ def total_count():
 
 @app.route('/', methods=["GET", "POST"])
 def index():
-    ln = len(Subscribe.query.filter_by().all())
-    print(ln)
     if request.method == "POST":
         email = request.form.get("email")
         if Subscribe.query.filter_by(email=email).first():
@@ -46,69 +44,80 @@ def index():
                     db.session.add(new_subscriber)
                     db.session.commit()
                     break
-            """sender=MailSender(sender_mail=SENDER_EMAIL, token=SMTPAPIKEY)
-            sender.send_message(api_key=api_key, receiver=email)"""
+            sender=MailSender(sender_mail=SENDER_EMAIL, token=SMTPAPIKEY)
+            sender.send_message(api_key=api_key, receiver=email)
 
     return render_template("index.html")
     
 
 @app.route('/earthquakes')
 def get_earthquakes():
-    min = request.args.get("min")
-    max = request.args.get("max")
-    if min and max:
+    api_key = request.args.get("api_key")
+    if Subscribe.query.filter_by(APIKey=api_key).first():
+        min = request.args.get("min")
+        max = request.args.get("max")
+        if min and max:
+            if request.args.get("order_by"):
+                return order(ls=eq.filter_by_intensity(min=float(min), max=float(max)))
+            return eq.filter_by_intensity(min=float(min), max=float(max))
+        if max:
+            if request.args.get("order_by"):
+                return order(ls=eq.filter_by_intensity(max=float(max)))
+            return eq.filter_by_intensity(max=float(max))
+        if min:
+            if request.args.get("order_by"):
+                return order(ls=eq.filter_by_intensity(min=float(min)))
+            return eq.filter_by_intensity(min=float(min))
+        
         if request.args.get("order_by"):
-            return order(ls=eq.filter_by_intensity(min=float(min), max=float(max)))
-        return eq.filter_by_intensity(min=float(min), max=float(max))
-    if max:
-        if request.args.get("order_by"):
-            return order(ls=eq.filter_by_intensity(max=float(max)))
-        return eq.filter_by_intensity(max=float(max))
-    if min:
-        if request.args.get("order_by"):
-            return order(ls=eq.filter_by_intensity(min=float(min)))
-        return eq.filter_by_intensity(min=float(min))
-    
-    if request.args.get("order_by"):
-                return order(ls=eq.earthquakes())
-    return make_response(eq.earthquakes()), 200
+                    return order(ls=eq.earthquakes())
+        return make_response(eq.earthquakes()), 200
+    else:
+        return 401
 
 
 @app.route('/earthquakes/<int:id>')
 def get_earthquake(id):
-    return make_response(eq.earthquakes()[id-1])
+    api_key = request.args.get("api_key")
+    if Subscribe.query.filter_by(APIKey=api_key).first():
+        return make_response(eq.earthquakes()[id-1])
+    else:
+        return 401
 
 
 @app.route("/earthquakes/<city>")
 def get_city(city):
     eq = Earthquake()
-  
-    if eq.city_response(city):
-        ls = eq.city_response(city)
-        if request.args.get("distance"):
-            distance = int(request.args.get("distance"))
-            if request.args.get("order_by"):
-                return order(ls=ls, city=city, distance=distance)
-            
-            min = request.args.get("min")
-            max = request.args.get("max")
-            if min and max:
+    api_key = request.args.get("api_key")
+    if Subscribe.query.filter_by(APIKey=api_key).first():
+        if eq.city_response(city):
+            ls = eq.city_response(city)
+            if request.args.get("distance"):
+                distance = int(request.args.get("distance"))
+                if request.args.get("order_by"):
+                    return order(ls=ls, city=city, distance=distance)
+                
+                min = request.args.get("min")
+                max = request.args.get("max")
+                if min and max:
+                        if request.args.get("order_by"):
+                            return order(ls=eq.filter_by_intensity(min=float(min), max=float(max)), city=city, distance=distance)
+                        return eq.filter_by_intensity(min=float(min), max=float(max))
+                if max:
                     if request.args.get("order_by"):
-                        return order(ls=eq.filter_by_intensity(min=float(min), max=float(max)), city=city, distance=distance)
-                    return eq.filter_by_intensity(min=float(min), max=float(max))
-            if max:
-                if request.args.get("order_by"):
-                    return order(ls=eq.filter_by_intensity(max=float(max)), city=city, distance=distance)
-                return eq.filter_by_intensity(max=float(max))
-            if min:
-                if request.args.get("order_by"):
-                    return order(ls=eq.filter_by_intensity(min=float(min)), city=city, distance=distance)
-                return eq.filter_by_intensity(min=float(min))
+                        return order(ls=eq.filter_by_intensity(max=float(max)), city=city, distance=distance)
+                    return eq.filter_by_intensity(max=float(max))
+                if min:
+                    if request.args.get("order_by"):
+                        return order(ls=eq.filter_by_intensity(min=float(min)), city=city, distance=distance)
+                    return eq.filter_by_intensity(min=float(min))
 
-        if request.args.get("order_by"):
-                return order(ls=ls, city=city)       
+            if request.args.get("order_by"):
+                    return order(ls=ls, city=city)       
 
-        return make_response(eq.city_response(city=city))
+            return make_response(eq.city_response(city=city))
+    else:
+        return 401
         
     
 
