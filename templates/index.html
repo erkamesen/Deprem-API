@@ -1,0 +1,237 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Documentation Template</title>
+    <meta name="description" content="A simple HTML/CSS DocumentationTemplate">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&family=Open+Sans:ital,wght@0,400;0,700;1,600&display=swap"
+        rel="stylesheet">
+
+    <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js"
+        integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP"
+        crossorigin="anonymous"></script>
+
+
+</head>
+
+<body>
+
+    <div class="navbar clear nav-top">
+        <div class="row content">
+
+            <a class="right" style="text-decoration: underline;" href="#"><i class="fas fa-book"></i>&nbsp;
+                Documentation</a>
+            <a class="right" href="mailto:yourapp@email.com" target="_blank"><i class="fas fa-paper-plane"></i>&nbsp;
+                yourapp@email.com</a>
+        </div>
+    </div>
+
+    <div class="container clear">
+        <div class="row wrapper">
+
+
+
+            <div class="right-col">
+                <p>Toplam Istek Sayısı: 0</p>
+                <p>Abone Sayısı: 9</p>
+
+                <h1>Abonelik</h1>
+                <p>Size özel süresiz bir APIKey üretilecek ve mailinize yollanacatır.</p>
+                <form action="" method="post">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" placeholder="ornek@mail.com">
+                    <button>Abone Ol</button>
+                </form>
+
+                <h1>Giriş</h1>
+
+                <p> Değerli ziyaretçiler; Sitemizde yayımlanan her türlü bilgi, veri ve haritalara ilişkin telif hakları
+                    münhasıran Boğaziçi Üniversitesi Rektörlüğü’ne ait olup, Boğaziçi Üniversitesi Kandilli Rasathanesi
+                    ve Deprem Araştırma Enstitüsü Bölgesel Deprem-Tsunami İzleme Ve Değerlendirme Merkezi kaynak
+                    gösterilerek kullanılabilir. Söz konusu bilgi, veri ve haritalar Boğaziçi Üniversitesi
+                    Rektörlüğü’nün yazılı izni ve onayı olmadan herhangi bir şekilde ticari amaçlı kullanılamaz. </p>
+
+
+                <h2>Uygulama Hakkında</h2>
+
+                <p id="technology">Python Flask Framework'ü ile geliştirilmiş olan bu Deprem API uygulamasına basitçe
+                    abone olup API Keyimizi elde ettikten sonra işlemlere başlayabiliriz. KOERİ sitesinden alınan son
+                    500 adet deprem üzerinde sorgular yapıp depremleri derinlik, şiddet ve mesafe gibi özelliklere göre
+                    sıralayabiliriz.
+                    /city path ine yollanacak isteklerle bir şehirde olan depremleri listeleyebilir, argüman olarak
+                    yollacağımız distance ile URL üzerinden istek
+                    yolladığımız şehire istediğimiz mesafedeki tüm depremleri listeleyebilir ve sıralama işlemlerini
+                    uygulayabiliriz.
+                </p>
+
+                <h2>Teknolojiler</h2>
+
+                <ul>
+                    <li>Flask</li>
+                    <li>Python</li>
+                    <li>HTML</li>
+                    <li>CSS</li>
+                    <li>SQLAlchemy</li>
+                </ul>
+
+
+                <div class="divider" style="width:24%; margin:30px 0;"></div>
+
+                <h1>ENDPOINTLER</h1>
+
+                <h2 style="color:bisque"> <span style="color:aqua">GET</span> /earthquakes </h2>
+
+                <table>
+                    <tr>
+                        <td>api_key</td>
+                        <td>required*</td>
+                        <td>string</td>
+                        <td>Abone olup mail yoluyla alabilirsiniz.</td>
+                    </tr>
+                    <tr>
+                        <td>min</td>
+                        <td>optional</td>
+                        <td>float</td>
+                        <td>Depremleri filtrelemek için minimum bir değer giriniz.</td>
+                    </tr>
+                    <tr>
+                        <td>max</td>
+                        <td>optional</td>
+                        <td>float</td>
+                        <td>Depremleri filtrelemek için maximum bir değer giriniz.</td>
+                    </tr>
+                    <tr>
+                        <td>order_by</td>
+                        <td>optional</td>
+                        <td>string</td>
+                        <td>Depremleri belli şartlara göre artan yada azalan değerde sıralamak için kullanılır.<br>
+                            Alabileceği değerler: <br> "intensity" => Şiddetlere göre sıralar. <br> "depth" => Derinliğe
+                            göre sıralar.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>order</td>
+                        <td>optional</td>
+                        <td>string</td>
+                        <td>Eğer order_by kullanıldıysa sıralamanın yönünü belirtmek için kullanılır.Default olarak
+                            artan yöndedir. <br> Alabileceği değerler: <br> "ascending", "descanding"
+
+                        </td>
+                    </tr>
+                </table>
+
+                <h2>Örnek</h2>
+                <div class="box">
+                    <blockquote>
+                        <pre>
+                      <code>
+                        curl http://127.0.0.1:5000/earthquakes?api_key=a6499dd44b4697afe9a9d8ab585a78dd&min=1&max=2
+                      </code>
+                    </pre>
+                    </blockquote>
+                </div>
+                <div class="box">
+                    <blockquote>
+                        <pre>
+                      <code>
+                        [{"control":"İlksel","coordinate":{"latitude":38.4523,"longitude":37.342},"depth":8.5,"id":1, <br> "intensity":{"MD":"-.-","ML":"1.6","MW":"-.-"}, <br> "location":"GAZIKOY-DARENDE (MALATYA)", <br> "time":{"date":"2023.04.12","hour":"04:00:22"}},
+                      </code>
+                    </pre>
+                    </blockquote>
+                </div>
+
+
+
+                <h2 style="color:bisque"> <span style="color:aqua">GET</span> /earthquakes/< id > </h2>
+
+                <p>Path variable olarak verilen ID ye ait depremi getirir.</p>
+
+        
+                <h2 style="color:bisque"> <span style="color:aqua">GET</span> /earthquakes/< city > </h2>
+
+                <p>Path variable olarak şehir ismi alır.</p>
+
+                <table>
+                    <tr>
+                        <td>api_key</td>
+                        <td>required*</td>
+                        <td>string</td>
+                        <td>Abone olup mail yoluyla alabilirsiniz.</td>
+                    </tr>
+                    <tr>
+                        <td>min</td>
+                        <td>optional</td>
+                        <td>float</td>
+                        <td>Depremleri filtrelemek için minimum bir değer giriniz.</td>
+                    </tr>
+                    <tr>
+                        <td>max</td>
+                        <td>optional</td>
+                        <td>float</td>
+                        <td>Depremleri filtrelemek için maximum bir değer giriniz.</td>
+                    </tr>
+                    <tr>
+                        <td>order_by</td>
+                        <td>optional</td>
+                        <td>string</td>
+                        <td>Depremleri belli şartlara göre artan yada azalan değerde sıralamak için kullanılır.<br>
+                            Alabileceği değerler: <br> "intensity" => Şiddetlere göre sıralar. <br> "depth" => Derinliğe
+                            göre sıralar. <br> "distance" => Mesafeye göre sıralar.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>order</td>
+                        <td>optional</td>
+                        <td>string</td>
+                        <td>Eğer order_by kullanıldıysa sıralamanın yönünü belirtmek için kullanılır.Default olarak
+                            artan yöndedir. <br> Alabileceği değerler: <br> "ascending", "descanding"
+
+                        </td>
+                    </tr>
+                </table>
+
+                <h2>Örnek</h2>
+                <div class="box">
+                    <blockquote>
+                        <pre>
+                      <code>
+                        curl http://127.0.0.1:5000/earthquakes/hatay?api_key=a6499dd44b4697afe9a9d8ab585a78dd&distance=200&max=3
+                      </code>
+                    </pre>
+                    </blockquote>
+                </div>
+                <div class="box">
+                    <blockquote>
+                        <pre>
+                      <code>
+                        {"control":"\u0130lksel","coordinate":{"latitude":37.8102,"longitude":36.3283},<br>
+                        "depth":10.7,"distance":156.61,"id":6, 
+                "intensity":{"MD":"-.-","ML":"1.6","MW":"-.-"}, <br>
+                "location":"CIGSAR-ANDIRIN (KAHRAMANMARAS)","time":{"date":"2023.04.12","hour":"03:26:15"}},
+                      </code>
+                    </pre>
+                    </blockquote>
+                </div>
+
+
+        
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</body>
+
+</html>
