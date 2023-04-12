@@ -11,10 +11,10 @@ class MailSender:
         self.mail_server = mail_server
         self.port = port
 
-    def send_message(self, message, receiver):
+    def send_message(self, api_key, receiver):
         with smtplib.SMTP(self.mail_server, self.port) as connection:  
             connection.starttls()  
             connection.login(self.sender_mail, password=self.token)  
             connection.sendmail(from_addr=self.sender_mail,  
                                 to_addrs=receiver,  
-                                msg=f"Subject:API Key\n\n{message}")
+                                msg=f"Subject:API Key\n\nThanks for subscribe ! Your api key: \n{api_key}")

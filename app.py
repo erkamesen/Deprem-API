@@ -4,6 +4,12 @@ from datetime import timedelta
 from models import db, Subscribe
 import secrets
 from mail_sender import MailSender
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+SMTPAPIKEY = os.getenv("SMTPAPIKEY")
+SENDER_EMAIL = os.getenv("SENDER_EMAIL")
 
 app = Flask(__name__)
 app.config.from_pyfile("config.py")
@@ -12,9 +18,22 @@ db.init_app(app)
 
 eq = Earthquake()
 
+@app.context_processor
+def total_subscribers():
+    ln = len(Subscribe.query.filter_by().all())
+    return {"total_subscribers":ln}
+
+@app.context_processor
+def total_count():
+    sm = 0
+    for subscribe in Subscribe.query.filter_by().all():
+        sm += int(subscribe.count)
+    return {"total_count":sm}
 
 @app.route('/', methods=["GET", "POST"])
 def index():
+    ln = len(Subscribe.query.filter_by().all())
+    print(ln)
     if request.method == "POST":
         email = request.form.get("email")
         if Subscribe.query.filter_by(email=email).first():
@@ -27,15 +46,14 @@ def index():
                     db.session.add(new_subscriber)
                     db.session.commit()
                     break
-            
-                
+            """sender=MailSender(sender_mail=SENDER_EMAIL, token=SMTPAPIKEY)
+            sender.send_message(api_key=api_key, receiver=email)"""
 
     return render_template("index.html")
     
 
 @app.route('/earthquakes')
 def get_earthquakes():
-              
     min = request.args.get("min")
     max = request.args.get("max")
     if min and max:
@@ -90,7 +108,7 @@ def get_city(city):
         if request.args.get("order_by"):
                 return order(ls=ls, city=city)       
 
-        return make_response(eq.distance_response(city=city, distance_control=distance))
+        return make_response(eq.city_response(city=city))
         
     
 
