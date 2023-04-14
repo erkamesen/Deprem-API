@@ -1,7 +1,6 @@
 # Deprem API
 a flask based API where you can do earthquake queries 
-
-
+from Kandilli Rasathanesi
 
 ## ENDPOINTS
 
